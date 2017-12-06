@@ -2,7 +2,7 @@
 	"manifest-version": 1,
 
 	"name": "driver-os-monitor",
-	"version": "0.1.0",
+	"version": "0.3.0",
 
 	"description": "A Databox driver to monitor the local os",
 	"author": "Anthony Brown <Anthony.Brown@nottingham.ac.uk> ()",
