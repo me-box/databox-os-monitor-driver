@@ -11,12 +11,10 @@ const databox = require('node-databox');
 //
 // Get the needed Environment variables
 //
-const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_STORE_ENDPOINT;
 const DATABOX_ZMQ_ENDPOINT = process.env.DATABOX_ZMQ_ENDPOINT
 
 //HTTPS certs created by the container mangers for this components HTTPS server.
 credentials = databox.getHttpsCredentials();
-
 
 var PORT = process.env.port || '8080';
 
@@ -88,8 +86,10 @@ freememStructured.DataSourceType = 'freememStructured';
 freememStructured.DataSourceID = 'freememStructured';
 freememStructured.StoreType = 'ts';
 
+console.log("RegisterDatasource:: start")
 tsbc.RegisterDatasource(loadavg1)
-.then(()=>{
+.then((resp)=>{
+  console.log("RegisterDatasource(loadavg1)::", resp)
   return tsbc.RegisterDatasource(loadavg5);
 })
 .then(()=>{
@@ -104,51 +104,68 @@ tsbc.RegisterDatasource(loadavg1)
 .then(()=>{
   return tsc.RegisterDatasource(freememStructured);
 })
+.then(()=>{
+  console.log("RegisterDatasource:: end")
+
+  monitor.start({ delay: 1000 });
+
+  // define handler that will always fire every cycle
+  monitor.on('monitor', function(event) {
+
+    var loadavg1 = event['loadavg'][0];
+    var loadavg5 = event['loadavg'][1];
+    var loadavg15 = event['loadavg'][2];
+    var freemem = event[freemem];
+    console.log(loadavg1);
+
+    saveBlob('loadavg1', event['loadavg'][0])
+    .then(()=>{
+      return saveBlob('loadavg5', event['loadavg'][1]);
+    })
+    .then(()=>{
+      return saveBlob('loadavg5', event['loadavg'][1]);
+
+    })
+    .then(()=>{
+      return saveBlob('loadavg15',event['loadavg'][2]);
+    })
+    .then(()=>{
+      return     saveBlob('freemem', event['freemem']);
+
+    })
+    .then(()=>{
+      return saveStructured('loadavg1Structured', event['loadavg'][0]);
+
+    })
+    .then(()=>{
+      return saveStructured('freememStructured', event['freemem']);
+    })
+    .catch((err)=>{
+      console.log("Error writing to store:", error);
+    })
+
+
+    function saveBlob(datasourceid,data) {
+        let json = {"data":data};
+        console.log("Saving data::", datasourceid, json);
+        return tsbc.Write(datasourceid,json);
+    }
+
+    function saveStructured(datasourceid,data) {
+        let json = {"value":data};
+        console.log("Saving data::", datasourceid, json);
+        return tsc.Write(datasourceid,json);
+    }
+
+  });
+
+})
 .catch((err)=>{
   console.log("Error registering data source:" + err);
 });
 
 
+
 https.createServer(credentials, app).listen(PORT);
-
-monitor.start({ delay: 1000 });
-
-// define handler that will always fire every cycle
-monitor.on('monitor', function(event) {
-
-  var loadavg1 = event['loadavg'][0];
-  var loadavg5 = event['loadavg'][1];
-  var loadavg15 = event['loadavg'][2];
-  var freemem = event[freemem];
-  console.log(loadavg1);
-
-  saveBlob('loadavg1', event['loadavg'][0]);
-  saveBlob('loadavg5', event['loadavg'][1]);
-  saveBlob('loadavg15',event['loadavg'][2]);
-  saveBlob('freemem', event['freemem']);
-
-  saveStructured('loadavg1Structured', event['loadavg'][0]);
-  saveStructured('freememStructured', event['freemem']);
-
-
-  function saveBlob(datasourceid,data) {
-    let json = {"data":data};
-    console.log("Saving data::", datasourceid, json);
-    tsbc.Write(datasourceid,json)
-    .catch((error)=>{
-      console.log("Error writing to store:", error);
-    });
-  }
-
-  function saveStructured(datasourceid,data) {
-    let json = {"value":data};
-    console.log("Saving data::", datasourceid, json);
-    tsc.Write(datasourceid,json)
-    .catch((error)=>{
-      console.log("Error writing to store:", error);
-    });
-  }
-
-});
 
 module.exports = app;
