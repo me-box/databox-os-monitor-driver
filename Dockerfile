@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM amd64/alpine:3.8
 
 RUN apk add --update make gcc g++ python node npm curl git krb5-dev zeromq-dev && \
 npm install zeromq --zmq-external --save && \
