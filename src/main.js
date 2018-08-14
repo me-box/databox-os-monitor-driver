@@ -26,6 +26,17 @@ app.get("/status", function(req, res) {
     res.send("active");
 });
 
+app.get("/ui", function(req, res) {
+  res.send(`<html>
+    <head></head>
+    <body>
+      <h1>Driver OS Monitor</h1>
+      <p>This is a simple Databox driver to log local os performance metrics (Free memory, Load Average).</p>
+      <p>Install the app-os-monitor to see a graph of its output. </p>
+    </body>
+  </html>`);
+});
+
 var vendor = "databox inc";
 
 //Blob data sources
