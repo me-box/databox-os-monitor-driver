@@ -8,6 +8,8 @@ const monitor = require("os-monitor");
 
 const databox = require('node-databox');
 
+const ws = require('ws');
+
 //
 // Get the needed Environment variables
 //
@@ -19,6 +21,7 @@ credentials = databox.getHttpsCredentials();
 var PORT = process.env.port || '8080';
 
 var app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -175,8 +178,26 @@ tsbc.RegisterDatasource(loadavg1)
   console.log("Error registering data source:" + err);
 });
 
+server = https.createServer(credentials, app).listen(PORT);
 
+const wss = new ws.Server({ server });
 
-https.createServer(credentials, app).listen(PORT);
+server.listen(PORT, () => {
+  console.log(`Server started on port ${server.address().port} :)`);
+});
+
+wss.on('connection', (ws) => {
+
+  //connection is up, let's add a simple simple event
+  ws.on('message', (message) => {
+
+      //log the received message and send it back to the client
+      console.log('received: %s', message);
+      ws.send(`Hello, you sent -> ${message}`);
+  });
+
+  //send immediatly a feedback to the incoming connection
+  ws.send('Hi there, I am a WebSocket echo server');
+});
 
 module.exports = app;
