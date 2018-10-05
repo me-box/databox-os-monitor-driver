@@ -6,7 +6,7 @@
     "registry": "registry.iotdatabox.com"
   },
   "scripts": {
-    "start": "node src/main.js",
+    "start": "node --max-old-space-size=128 src/main.js",
     "build": "docker build -t databox/driver-os-monitor .",
     "deploy": "docker tag databox/driver-os-monitor $npm_package_config_registry/driver-os-monitor && docker push $npm_package_config_registry/driver-os-monitor",
     "build-arm": "docker build -f Dockerfile-arm -t databox/driver-os-monitor-arm .",
