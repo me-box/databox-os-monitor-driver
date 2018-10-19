@@ -144,7 +144,7 @@ tsbc.RegisterDatasource(loadavg1)
       return saveBlob('loadavg15',event['loadavg'][2]);
     })
     .then(()=>{
-      return     saveBlob('freemem', event['freemem']);
+      return  saveBlob('freemem', event['freemem']);
 
     })
     .then(()=>{
@@ -154,22 +154,16 @@ tsbc.RegisterDatasource(loadavg1)
     .then(()=>{
       return saveStructured('freememStructured', event['freemem']);
     })
+    .then(()=>{
+      event = null
+      loadavg1 = null
+      loadavg5 = null
+      loadavg15 =null
+      freemem = null
+    })
     .catch((err)=>{
       console.log("Error writing to store:", error);
     })
-
-
-    function saveBlob(datasourceid,data) {
-        let json = {"data":data};
-        console.log("Saving data::", datasourceid, json);
-        return tsbc.Write(datasourceid,json);
-    }
-
-    function saveStructured(datasourceid,data) {
-        let json = {"value":data};
-        console.log("Saving data::", datasourceid, json);
-        return tsc.Write(datasourceid,json);
-    }
 
   });
 
@@ -177,6 +171,18 @@ tsbc.RegisterDatasource(loadavg1)
 .catch((err)=>{
   console.log("Error registering data source:" + err);
 });
+
+function saveBlob(datasourceid,data) {
+  let json = {"data":data};
+  console.log("Saving data::", datasourceid, json);
+  return tsbc.Write(datasourceid,json);
+}
+
+function saveStructured(datasourceid,data) {
+  let json = {"value":data};
+  console.log("Saving data::", datasourceid, json);
+  return tsc.Write(datasourceid,json);
+}
 
 server = https.createServer(credentials, app).listen(PORT);
 

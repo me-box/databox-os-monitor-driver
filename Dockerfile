@@ -1,12 +1,16 @@
 FROM amd64/alpine:3.8
 
-ADD ./package.json /package.json
-RUN apk add --no-cache make gcc g++ python nodejs npm curl git krb5-dev zeromq-dev && \
-npm install zeromq --zmq-external --save && \
-npm install --production && npm run clean && \
-apk del make gcc g++ python curl git krb5-dev
+WORKDIR /app
 
-RUN addgroup -S databox && adduser -S -g databox databox
+RUN addgroup -S databox && adduser -S -g databox databox && \
+apk --no-cache add build-base pkgconfig nodejs npm libzmq zeromq-dev libsodium-dev python  && \
+npm install zeromq@4.6.0 --zmq-external --verbose && \
+apk del build-base pkgconfig libsodium-dev python zeromq-dev
+
+ADD ./package.json package.json
+
+RUN npm install --production && npm run clean
+
 USER databox
 ADD . .
 
