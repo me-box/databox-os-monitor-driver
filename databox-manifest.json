@@ -23,5 +23,44 @@
 
 	"resource-requirements": {
     	"store":"core-store"
-	}
+	},
+
+	"provides": [
+		{
+			"data-source-type": "loadavg1",
+			"description": "Databox load average 1 minute",
+			"store-type": "tsblob",
+			"schema": {}
+		},
+		{
+			"data-source-type": "loadavg5",
+			"description": "Databox load average 5 minute",
+			"store-type": "tsblob",
+			"schema": {}
+		},
+		{
+			"data-source-type": "loadavg15",
+			"description": "Databox load average 15 minute",
+			"store-type": "tsblob",
+			"schema": {}
+		},
+		{
+			"data-source-type": "freemem",
+			"description": "Databox free memory in bytes",
+			"store-type": "tsblob",
+			"schema": {}
+		},
+		{
+			"data-source-type": "loadavg1Structured",
+			"description": "Databox load average 1 minute",
+			"store-type": "ts",
+			"schema": {}
+		},
+		{
+			"data-source-type": "freememStructured",
+			"description": "Databox free memory in bytes",
+			"store-type": "ts",
+			"schema": {}
+		}
+	]
 }
