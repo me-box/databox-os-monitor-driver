@@ -36,10 +36,10 @@
   "homepage": "https://github.com/me-box/driver-os-monitor",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "modclean": "^2.1.2",
-    "node-databox": "^0.8.1",
-    "os-monitor": "^1.0.6",
+    "node-databox": "^0.10.4",
+    "os-monitor": "^1.0.7",
     "request": "^2.88.0",
     "ws": "^3.3.1"
   }
