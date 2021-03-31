@@ -39,7 +39,7 @@
     "express": "^4.16.4",
     "modclean": "^2.1.2",
     "node-databox": "^0.10.4",
-    "os-monitor": "^1.0.7",
+    "os-monitor": "^1.0.10",
     "request": "^2.88.0",
     "ws": "^3.3.1"
   }
