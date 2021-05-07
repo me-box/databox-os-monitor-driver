@@ -40,7 +40,7 @@
     "modclean": "^2.1.2",
     "node-databox": "^0.10.4",
     "os-monitor": "^1.0.7",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "ws": "^3.3.1"
   }
 }
